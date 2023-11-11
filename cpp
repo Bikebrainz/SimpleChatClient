@@ -1,17 +1,14 @@
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <unistd.h>
 
 #define PORT 8080
 
 int main() {
-    struct sockaddr_in address;
-    int sock = 0, valread;
     struct sockaddr_in serv_addr;
+    int sock = 0, valread;
     char buffer[1024] = {0};
     char hello[1024];
 
@@ -34,9 +31,12 @@ int main() {
         return -1;
     }
 
-    std::cout << "Connected to server. Enter messages to send:\n";
+    std::cout << "Connected to server. Enter messages to send (type 'exit' to quit):\n";
     while (true) {
         std::cin.getline(hello, 1024);
+        if (strcmp(hello, "exit") == 0) {
+            break;
+        }
         send(sock, hello, strlen(hello), 0);
         valread = read(sock, buffer, 1024);
         std::cout << "Server: " << buffer << std::endl;
